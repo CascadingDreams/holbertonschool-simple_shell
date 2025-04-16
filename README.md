@@ -9,11 +9,3 @@ This project is a basic UNIX command line interpreter written in C. It mimics th
 ## Examples
 
 ### Interactive Mode:
-
-```bash
-$ ./hsh
-#cisfun$ /bin/ls
-AUTHORS  execute_command.c  hsh  main.c  read_input.c  shell.h
-#cisfun$ /fake/command
-./hsh: No such file or directory
-#cisfun$ ^D

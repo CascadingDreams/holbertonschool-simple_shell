@@ -1,5 +1,15 @@
 #include "shell.h"
 
+/**
+ * main - the entry point for the simple shell program.
+ *
+ * This function displays a prompt, reads user input, and forks a child process to
+ * execute the command using execve(). The parent waits for the child to finish.
+ * The loop continues until an EOF (Ctrl+D/C) is encountered, which causes the program
+ * to terminate and free allocated memory.
+ *
+ * Return: 0 on success, exits with status 1 on failure.
+ */
 int main(void)
 {
 	int shell_running = 1;
@@ -29,7 +39,8 @@ int main(void)
 
 		if (pid < 0)
 		{
-			perror("fork failed");
+			perror("Error: fork failed");
+			fprintf(stderr, "Failed to create a new process. Exiting...\n");
 			exit(1);
 		}
 
@@ -45,5 +56,5 @@ int main(void)
 		}
 	}
 
-	return 0;
+	return (0);
 }
