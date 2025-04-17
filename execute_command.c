@@ -28,7 +28,7 @@ int execute_command(char *input_line)
 		char *argv[2];
 		argv[0] = input_line;
 		argv[1] = NULL;
-		if (execve(input_line, argv, NULL) == -1)
+		if (execve(input_line, argv, environ) == -1)
 		{
 			perror(input_line);
 			exit(1);

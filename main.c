@@ -47,6 +47,7 @@ int main(void)
 		if (pid == 0)
 		{
 			execute_command(input_line);
+			free(input_line);
 			exit(0);
 		}
 
@@ -55,6 +56,6 @@ int main(void)
 			wait(&status);
 		}
 	}
-
+	cleanup(input_line);
 	return (0);
 }
