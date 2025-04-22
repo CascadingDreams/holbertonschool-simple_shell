@@ -1,5 +1,19 @@
 #include "shell.h"
 
+static char *input_line = NULL;
+
+#include "shell.h"
+
+void handle_sigint(int signum)
+{
+
+	if (signum > 0)
+	{
+		free(input_line);
+	}
+	exit(EXIT_SUCCESS);
+}
+
 /**
  * main - the entry point for the simple shell program.
  *
@@ -13,13 +27,12 @@
 int main(void)
 {
 	int shell_running = 1;
-	char *input_line = NULL;
 	size_t input_len = 0;
 	ssize_t user_input;
 	pid_t pid;
 	int status;
 
-	signal(SIGINT, sigint_handler);
+	signal(SIGINT, handle_sigint);
 
 	while (shell_running)
 	{
@@ -31,7 +44,11 @@ int main(void)
 		user_input = read_input(&input_line, &input_len);
 		if (user_input == -1)
 		{
-			free(input_line);
+			if (input_line != NULL)
+			{
+				free(input_line);
+				input_line = NULL;
+			}
 			break;
 		}
 
@@ -49,7 +66,11 @@ int main(void)
 		if (pid == 0)
 		{
 			execute_command(input_line);
-			free(input_line);
+			if (input_line != NULL)
+			{
+				free(input_line);
+				input_line = NULL;
+			}
 			exit(0);
 		}
 
@@ -58,6 +79,10 @@ int main(void)
 			wait(&status);
 		}
 	}
-	free(input_line);
+	if (input_line != NULL)
+	{
+		free(input_line);
+		input_line = NULL;
+	}
 	return (0);
 }

@@ -11,6 +11,6 @@
 extern char **environ;
 ssize_t read_input(char **lineptr, size_t *n);
 int execute_command(char *input_line);
-void sigint_handler(int sig);
+void handle_sigint(int sig);
 
 #endif
