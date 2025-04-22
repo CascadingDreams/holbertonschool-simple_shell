@@ -31,6 +31,7 @@ int main(void)
 	ssize_t user_input;
 	pid_t pid;
 	int status;
+	char *trimmed_input;
 
 	signal(SIGINT, handle_sigint);
 
@@ -54,6 +55,11 @@ int main(void)
 
 		input_line[strcspn(input_line, "\n")] = '\0';
 
+		trimmed_input = trim_space(input_line);
+
+		if (*trimmed_input == '\0')
+			continue;
+
 		pid = fork();
 
 		if (pid < 0)
@@ -65,7 +71,7 @@ int main(void)
 
 		if (pid == 0)
 		{
-			execute_command(input_line);
+			execute_command(trimmed_input);
 			if (input_line != NULL)
 			{
 				free(input_line);
