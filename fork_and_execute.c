@@ -37,7 +37,7 @@ void fork_and_execute(char *input_line, char **envp)
 		execve(full_path, argv, envp);
 		perror("execve failed");
 		free(full_path);
-		exit(1);
+		exit(127);
 	}
 	else
 	{
