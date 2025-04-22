@@ -85,9 +85,7 @@ int main(void)
 		}
 
 		if (pid > 0)
-		{
 			wait(&status);
-		}
 	}
 	if (input_line != NULL)
 	{
