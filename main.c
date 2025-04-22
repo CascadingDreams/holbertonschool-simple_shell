@@ -10,7 +10,6 @@ static char *input_line;
  */
 void handle_sigint(int signum)
 {
-
 	if (signum > 0)
 	{
 		free(input_line);
