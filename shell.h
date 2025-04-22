@@ -12,8 +12,10 @@
 
 extern char **environ;
 ssize_t read_input(char **lineptr, size_t *n);
-int execute_command(char *input_line);
 void handle_sigint(int sig);
 char *trim_space(char *str);
+int parse_arguments(char *input, char **argv);
+void fork_and_execute(char *input_line);
+char *find_command_path(char *command);
 
 #endif
