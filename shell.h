@@ -10,6 +10,5 @@
 extern char **environ;
 ssize_t read_input(char **lineptr, size_t *n);
 int execute_command(char *input_line);
-void cleanup(char *input_line);
 
 #endif

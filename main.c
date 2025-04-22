@@ -29,7 +29,7 @@ int main(void)
 		user_input = read_input(&input_line, &input_len);
 		if (user_input == -1)
 		{
-			cleanup(input_line);
+			free(input_line);
 			break;
 		}
 
@@ -55,6 +55,6 @@ int main(void)
 			wait(&status);
 		}
 	}
-	cleanup(input_line);
+	free(input_line);
 	return (0);
 }
