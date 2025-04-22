@@ -1,6 +1,5 @@
 #include "shell.h"
 
-extern char **environ;
 /**
  * fork_and_execute - Forks a new process and executes the command.
  * @input_line: the command string.
