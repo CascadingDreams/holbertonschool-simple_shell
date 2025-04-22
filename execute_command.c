@@ -25,12 +25,20 @@ int execute_command(char *input_line)
 
 	if (pid == 0)
 	{
-		char *argv[2];
-		argv[0] = input_line;
-		argv[1] = NULL;
-		if (execve(input_line, argv, environ) == -1)
+		char *argv[MAX_ARGS];
+		int i = 0;
+		char *token = strtok(input_line, " ");
+
+		while (token != NULL && i < MAX_ARGS - 1)
 		{
-			perror(input_line);
+			argv[i++] = token;
+			token = strtok(NULL, " ");
+		}
+		argv[i] = NULL;
+
+		if (execve(argv[0], argv, environ) == -1)
+		{
+			perror(argv[0]);
 			exit(1);
 		}
 	}
