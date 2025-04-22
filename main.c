@@ -21,6 +21,8 @@ int main(void)
 
 	while (shell_running)
 	{
+		signal(SIGINT, sigint_handler);
+		
 		if (isatty(STDIN_FILENO))
 		{
 			printf("#cisfun$ ");
@@ -47,6 +49,7 @@ int main(void)
 		if (pid == 0)
 		{
 			execute_command(input_line);
+			free(input_line);
 			exit(0);
 		}
 
