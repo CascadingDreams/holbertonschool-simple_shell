@@ -35,6 +35,8 @@ int main(int argc, char **argv, char **envp)
 	size_t input_len = 0;
 	ssize_t user_input;
 	char *trimmed_input;
+	(void)argc;
+	(void)argv;
 
 	signal(SIGINT, handle_sigint);
 
