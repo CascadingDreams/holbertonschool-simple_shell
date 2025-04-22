@@ -2,8 +2,12 @@
 
 static char *input_line = NULL;
 
-#include "shell.h"
-
+/**
+ * handle_sigint - Handles Ctrl+C (SIGINT) signal.
+ * @signum: Signal number.
+ *
+ * Frees input and exits the shell gracefully on interrupt.
+ */
 void handle_sigint(int signum)
 {
 

@@ -26,9 +26,10 @@ int execute_command(char *input_line)
 	if (pid == 0)
 	{
 		char *argv[MAX_ARGS];
+		char *token;
 		int i = 0;
-		char *token = strtok(input_line, " ");
 
+		token = strtok(input_line, " ");
 		while (token != NULL && i < MAX_ARGS - 1)
 		{
 			argv[i++] = token;
