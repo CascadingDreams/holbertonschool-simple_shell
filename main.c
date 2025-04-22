@@ -10,6 +10,7 @@ static char *input_line;
  */
 void handle_sigint(int signum)
 {
+
 	if (signum > 0)
 	{
 		free(input_line);
@@ -28,7 +29,7 @@ void handle_sigint(int signum)
  *
  * Return: 0 on success, exits with status 1 on failure.
  */
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
 	int shell_running = 1;
 	size_t input_len = 0;
@@ -59,7 +60,7 @@ int main(void)
 		if (*trimmed_input == '\0')
 			continue;
 
-		fork_and_execute(trimmed_input);
+		fork_and_execute(trimmed_input, envp);
 	}
 
 	if (input_line != NULL)

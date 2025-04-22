@@ -6,7 +6,7 @@
  * Return: The full path (must be freed), or NULL if not found
  */
 
-char *find_command_path(char *command)
+char *find_command_path(char *command, char **envp)
 {
 	char *env_path, *path_copy, *dir;
 	char full_path[256];
@@ -17,7 +17,8 @@ char *find_command_path(char *command)
 			return (strdup(command));
 		return (NULL);
 	}
-	env_path = getenv("PATH");
+
+	env_path = _getenv("PATH", envp);
 	if (!env_path)
 		return (NULL);
 

@@ -5,7 +5,7 @@
  * @input_line: the command string.
  */
 
-void fork_and_execute(char *input_line)
+void fork_and_execute(char *input_line, char **envp)
 {
 	pid_t pid;
 	int status;
@@ -16,7 +16,7 @@ void fork_and_execute(char *input_line)
 	if (!argv[0])
 		return;
 
-	full_path = find_command_path(argv[0]);
+	full_path = find_command_path(argv[0], envp);
 	if (!full_path)
 	{
 		fprintf(stderr, "command not found: %s\n", input_line);
@@ -34,12 +34,11 @@ void fork_and_execute(char *input_line)
 
 	if (pid == 0)
 	{
-		execve(full_path, argv, environ);
+		execve(full_path, argv, envp);
 		perror("execve failed");
 		free(full_path);
 		exit(1);
 	}
-
 	else
 	{
 		wait(&status);
