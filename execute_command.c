@@ -1,51 +1,21 @@
 #include "shell.h"
 
 /**
- * execute_command - forks a child process to execute a given command.
- * @input_line: a string representing the full path to the executable command.
+ * execute_command - Executes a command with arguments by using execve().
+ * @input_line: The command string to execute.
  *
- * This function creates a new process using fork(). In the child process,
- * it attempts to execute the provided command using execve(). If the command
- * fails (e.g., the file doesn't exist or isn't executable), it prints an
- * error message. The parent process waits for the child to complete before
- * returning.
- *
- * Return: 0 on success, -1 on fork failure.
+ * Return: 0 on success, -1 on execve failure.
  */
 int execute_command(char *input_line)
 {
-	pid_t pid = fork();
-	int status;
+	char *argv[MAX_ARGS];
 
-	if (pid < 0)
+	parse_arguments(input_line, argv);
+
+	if (execve(argv[0], argv, environ) == -1)
 	{
-		perror("fork failed");
+		perror(argv[0]);
 		return (-1);
-	}
-
-	if (pid == 0)
-	{
-		char *argv[MAX_ARGS];
-		char *token;
-		int i = 0;
-
-		token = strtok(input_line, " ");
-		while (token != NULL && i < MAX_ARGS - 1)
-		{
-			argv[i++] = token;
-			token = strtok(NULL, " ");
-		}
-		argv[i] = NULL;
-
-		if (execve(argv[0], argv, environ) == -1)
-		{
-			perror(argv[0]);
-			exit(1);
-		}
-	}
-	else
-	{
-		wait(&status);
 	}
 
 	return (0);

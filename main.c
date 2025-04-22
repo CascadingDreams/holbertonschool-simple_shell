@@ -1,6 +1,6 @@
 #include "shell.h"
 
-static char *input_line = NULL;
+static char *input_line;
 
 /**
  * handle_sigint - Handles Ctrl+C (SIGINT) signal.
@@ -21,10 +21,11 @@ void handle_sigint(int signum)
 /**
  * main - the entry point for the simple shell program.
  *
- * This function displays a prompt, reads user input, and forks a child process to
- * execute the command using execve(). The parent waits for the child to finish.
- * The loop continues until an EOF (Ctrl+D/C) is encountered, which causes the program
- * to terminate and free allocated memory.
+ * This function displays a prompt, reads user input,
+ * and forks a child process to execute the command
+ * using execve(). The parent waits for the child to finish.
+ * The loop continues until an EOF (Ctrl+D/C) is encountered,
+ * which causes the program to terminate and free allocated memory.
  *
  * Return: 0 on success, exits with status 1 on failure.
  */
@@ -33,8 +34,6 @@ int main(void)
 	int shell_running = 1;
 	size_t input_len = 0;
 	ssize_t user_input;
-	pid_t pid;
-	int status;
 	char *trimmed_input;
 
 	signal(SIGINT, handle_sigint);
@@ -42,9 +41,7 @@ int main(void)
 	while (shell_running)
 	{
 		if (isatty(STDIN_FILENO))
-		{
 			printf("#cisfun$ ");
-		}
 
 		user_input = read_input(&input_line, &input_len);
 		if (user_input == -1)
@@ -60,39 +57,17 @@ int main(void)
 		input_line[strcspn(input_line, "\n")] = '\0';
 
 		trimmed_input = trim_space(input_line);
-
 		if (*trimmed_input == '\0')
 			continue;
 
-		pid = fork();
-
-		if (pid < 0)
-		{
-			perror("Error: fork failed");
-			fprintf(stderr, "Failed to create a new process. Exiting...\n");
-			exit(1);
-		}
-
-		if (pid == 0)
-		{
-			execute_command(trimmed_input);
-			if (input_line != NULL)
-			{
-				free(input_line);
-				input_line = NULL;
-			}
-			exit(0);
-		}
-
-		if (pid > 0)
-		{
-			wait(&status);
-		}
+		fork_and_execute(trimmed_input);
 	}
+
 	if (input_line != NULL)
 	{
 		free(input_line);
 		input_line = NULL;
 	}
+
 	return (0);
 }
