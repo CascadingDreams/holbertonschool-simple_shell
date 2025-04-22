@@ -1,1 +1,76 @@
-#manual placer
+.TH SIMPLE_SHELL "April 2025" "Version 1.0" "User Commands"
+.SH NAME
+simple_shell \- a simple UNIX command line interpreter
+.SH SYNOPSIS
+.B simple_shell
+.SH DESCRIPTION
+.B simple_shell
+is a simple command line interpreter that executes commands read from standard input.
+It is intended to be compatible with the most basic functions of the standard shell \fBsh\fR.
+.SH INVOCATION
+.B simple_shell
+can be invoked both interactively and non-interactively.
+.PP
+When invoked with standard input connected to a terminal, the shell reads commands from standard input.
+It displays the prompt \fB#cisfun$\fR when it is ready to read a command.
+.PP
+When invoked without a terminal connected to standard input, the shell executes received commands in order.
+.SH COMMAND EXECUTION
+After a command has been split into words, if it results in a simple command and an optional list of arguments,
+the following actions are taken:
+.PP
+The command is executed with its arguments in a separate process using the \fBfork\fR and \fBexecve\fR system calls.
+.SH ENVIRONMENT
+.B simple_shell
+uses the same environment list that was populated at program startup.
+When a program is executed, the environment is passed to the new program.
+.SH EXIT STATUS
+The exit status of the shell is the exit status of the last command executed.
+If no command is executed, the exit status is 0.
+.SH SIGNALS
+When used interactively, \fBsimple_shell\fR ignores SIGTERM signal. 
+It handles Ctrl+C (SIGINT) to gracefully exit the shell.
+.SH FILES
+.TP
+.I main.c
+The entry point of the shell program.
+.TP
+.I execute_command.c
+Handles the execution of commands.
+.TP
+.I read_input.c
+Manages the reading of user input.
+.TP
+.I trim_space.c
+Handles whitespace trimming.
+.TP
+.I shell.h
+Header file containing function prototypes and includes.
+.SH EXAMPLES
+$ ./simple_shell
+.br
+#cisfun$ ls
+.br
+file1.txt file2.txt directory/
+.br
+#cisfun$ pwd
+.br
+/home/user/projects
+.br
+#cisfun$ echo Hello, world!
+.br
+Hello, world!
+.br
+#cisfun$ exit
+.br
+$
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Ealise Wang (10503@holbertonstudents.com), 
+Sophie Kyi Oo (10538@holbertonstudents.com), 
+Sammy Hill (myallio94@gmail.com)
+.SH SEE ALSO
+.BR sh (1),
+.BR bash (1),
+.BR dash (1)
