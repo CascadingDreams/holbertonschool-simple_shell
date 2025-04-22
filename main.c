@@ -19,10 +19,10 @@ int main(void)
 	pid_t pid;
 	int status;
 
+	signal(SIGINT, sigint_handler);
+
 	while (shell_running)
 	{
-		signal(SIGINT, sigint_handler);
-		
 		if (isatty(STDIN_FILENO))
 		{
 			printf("#cisfun$ ");

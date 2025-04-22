@@ -6,6 +6,12 @@ void sigint_handler(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\nExiting cleanly...\n", 21);
-	free(input_line);
+
+	if (input_line != NULL)
+	{
+		free(input_line);
+		input_line = NULL;
+	}
+
 	exit(0);
 }
