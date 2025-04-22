@@ -47,7 +47,6 @@ int main(void)
 		if (pid == 0)
 		{
 			execute_command(input_line);
-			free(input_line);
 			exit(0);
 		}
 
