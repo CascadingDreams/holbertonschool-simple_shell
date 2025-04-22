@@ -19,15 +19,18 @@ void handle_sigint(int signum)
 }
 
 /**
- * main - the entry point for the simple shell program.
+ * main - Entry point for the simple shell program.
  *
- * This function displays a prompt, reads user input,
- * and forks a child process to execute the command
- * using execve(). The parent waits for the child to finish.
- * The loop continues until an EOF (Ctrl+D/C) is encountered,
- * which causes the program to terminate and free allocated memory.
+ * @argc: The argument count.
+ * @argv: The argument vector (array of arguments).
+ * @envp: The environment variables.
  *
- * Return: 0 on success, exits with status 1 on failure.
+ * Displays a prompt, reads user input, and forks a child process
+ * to execute commands using `execve()`.
+ * The loop continues until EOF (Ctrl+D/C) is encountered, causing the
+ * program to terminate and free memory.
+ *
+ * Return: 0 on success, 1 on failure.
  */
 int main(int argc, char **argv, char **envp)
 {
@@ -35,8 +38,7 @@ int main(int argc, char **argv, char **envp)
 	size_t input_len = 0;
 	ssize_t user_input;
 	char *trimmed_input;
-	(void)argc;
-	(void)argv;
+	(void)argc, (void)argv;
 
 	signal(SIGINT, handle_sigint);
 
