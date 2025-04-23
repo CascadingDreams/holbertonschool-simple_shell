@@ -9,7 +9,8 @@ void handle_input_error(char **argv)
 	if (!argv[0] || argv[0][0] == '\0')
 	{
 		fprintf(stderr, "./hsh: 1: : not found\n");
-		exit(127);
+		if (!isatty(STDIN_FILENO))
+			exit(127);
 	}
 }
 
@@ -34,42 +35,52 @@ void execute_command(char *full_path, char **argv, char **envp)
  * @input_line: Input command string.
  * @envp: Environment variables.
  */
-void fork_and_execute(char *input_line, char **envp)
+int fork_and_execute(char *input_line, char **envp)
 {
 	pid_t pid;
-	int status;
+	int status, exit_status = 0;
 	char *full_path, *argv[MAX_ARGS];
 
 	parse_arguments(input_line, argv);
-	handle_input_error(argv);
+
+	if (!argv[0] || argv[0][0] == '\0')
+		return (0);
 
 	full_path = find_command_path(argv[0], envp);
 	if (!full_path)
 	{
 		fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-		exit(127);
+		if (!isatty(STDIN_FILENO))
+			exit(127);
+		return (127);
 	}
 
 	pid = fork();
 	if (pid == 0)
+	{
 		execute_command(full_path, argv, envp);
+	}
 	else if (pid < 0)
 	{
 		perror("fork failed");
 		free(full_path);
-		exit(1);
+		if (!isatty(STDIN_FILENO))
+			exit(1);
+		return (1);
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
 		free(full_path);
 
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+		else
+			exit_status = 1;
+
 		if (!isatty(STDIN_FILENO))
-		{
-			if (WIFEXITED(status))
-				exit(WEXITSTATUS(status));
-			else
-				exit(2);
-		}
+			exit(exit_status);
 	}
+
+	return (exit_status);
 }

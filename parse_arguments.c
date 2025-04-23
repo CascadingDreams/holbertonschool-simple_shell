@@ -12,6 +12,9 @@ int parse_arguments(char *input, char **argv)
 	char *token;
 	int i = 0;
 
+	while (*input && isspace((unsigned char)*input))
+		input++;
+
 	token = strtok(input, " \t\r\n");
 	while (token != NULL && i < MAX_ARGS - 1)
 	{

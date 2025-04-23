@@ -20,28 +20,41 @@ void handle_sigint(int signum)
  * @trimmed_input: The trimmed input line.
  * @envp: The environment variables.
  */
-void process_input(char *trimmed_input, char **envp)
+int process_input(char *trimmed_input, char **envp)
 {
-	char *token;
+	char *argv[MAX_ARGS];
+	int argc;
 
 	if (*trimmed_input == '\0')
-		return;
+		return (0);
 
-	if (strcmp(trimmed_input, "env") == 0)
+	argc = parse_arguments(trimmed_input, argv);
+
+	if (argc == 0)
+		return (0);
+
+	if (strcmp(argv[0], "env") == 0)
 	{
 		print_env();
-		return;
+		return (0);
 	}
 
-	if (strcmp(trimmed_input, "exit") == 0)
-		exit(0);
-
-	token = strtok(trimmed_input, " ");
-	while (token != NULL)
+	if (strcmp(argv[0], "exit") == 0)
 	{
-		fork_and_execute(token, envp);
-		token = strtok(NULL, " ");
+		if (argc > 1)
+		{
+			int status = atoi(argv[1]);
+			free(input_line);
+			exit(status);
+		}
+		else
+		{
+			free(input_line);
+			exit(0);
+		}
 	}
+
+	return (fork_and_execute(trimmed_input, envp));
 }
 
 /**
@@ -50,11 +63,13 @@ void process_input(char *trimmed_input, char **envp)
  */
 void run_shell_loop(char **envp)
 {
+	int shell_running = 1;
 	char *trimmed_input;
 	size_t input_len = 0;
 	ssize_t user_input;
+	int status = 0;
 
-	while (1)
+	while (shell_running)
 	{
 		if (isatty(STDIN_FILENO))
 			printf("#cisfun$ ");
@@ -66,11 +81,15 @@ void run_shell_loop(char **envp)
 		input_line[strcspn(input_line, "\n")] = '\0';
 		trimmed_input = trim_space(input_line);
 
-		process_input(trimmed_input, envp);
+		status = process_input(trimmed_input, envp);
+		(void)status;
 	}
 
-	free(input_line);
-	input_line = NULL;
+	if (input_line)
+	{
+		free(input_line);
+		input_line = NULL;
+	}
 }
 
 /**

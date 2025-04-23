@@ -19,7 +19,7 @@ ssize_t read_input(char **lineptr, size_t *n);
 void handle_sigint(int sig);
 char *trim_space(char *str);
 int parse_arguments(char *input, char **argv);
-void fork_and_execute(char *input_line, char **envp);
+int fork_and_execute(char *input_line, char **envp);
 char *find_command_path(char *command, char **envp);
 char *_getenv(char *name, char **env);
 int main(int argc, char **argv, char **envp);
@@ -28,6 +28,6 @@ void run_shell_loop(char **envp);
 void print_env(void);
 void execute_command(char *full_path, char **argv, char **envp);
 void handle_input_error(char **argv);
-void process_input(char *trimmed_input, char **envp);
+int process_input(char *trimmed_input, char **envp);
 
 #endif

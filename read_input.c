@@ -22,6 +22,11 @@ ssize_t read_input(char **lineptr, size_t *n)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 		}
+		if (*lineptr)
+		{
+			free(*lineptr);
+			*lineptr = NULL;
+		}
 	}
 	return (input);
 }

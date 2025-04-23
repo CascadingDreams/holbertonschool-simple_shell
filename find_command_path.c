@@ -9,15 +9,24 @@
 
 char *find_command_path(char *command, char **envp)
 {
-	char *path_env = getenv("PATH");
+	char *path_env = _getenv("PATH", envp);
 	char *path_copy, *dir, *full_path;
 	struct stat st;
-	(void)envp;
+
+	if (command[0] == '/' || (command[0] == '.' && command[1] == '/'))
+	{
+		if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
+			return (strdup(command));
+		return (NULL);
+	}
 
 	if (!path_env || path_env[0] == '\0')
 		return (NULL);
 
 	path_copy = strdup(path_env);
+	if (!path_copy)
+		return (NULL);
+
 	dir = strtok(path_copy, ":");
 	while (dir)
 	{
@@ -28,7 +37,7 @@ char *find_command_path(char *command, char **envp)
 			return (NULL);
 		}
 		sprintf(full_path, "%s/%s", dir, command);
-		if (stat(full_path, &st) == 0)
+		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
 		{
 			free(path_copy);
 			return (full_path);
