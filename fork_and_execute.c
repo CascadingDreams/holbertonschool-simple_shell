@@ -63,7 +63,13 @@ void fork_and_execute(char *input_line, char **envp)
 	{
 		waitpid(pid, &status, 0);
 		free(full_path);
+
 		if (!isatty(STDIN_FILENO))
-			exit(WIFEXITED(status) ? WEXITSTATUS(status) : 2);
+		{
+			if (WIFEXITED(status))
+				exit(WEXITSTATUS(status));
+			else
+				exit(2);
+		}
 	}
 }

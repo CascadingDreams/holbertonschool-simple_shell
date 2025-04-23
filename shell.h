@@ -28,5 +28,6 @@ void run_shell_loop(char **envp);
 void print_env(void);
 void execute_command(char *full_path, char **argv, char **envp);
 void handle_input_error(char **argv);
+void process_input(char *trimmed_input, char **envp);
 
 #endif
