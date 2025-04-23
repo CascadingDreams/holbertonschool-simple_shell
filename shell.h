@@ -6,9 +6,13 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <ctype.h>
 #include <signal.h>
+#include <sys/stat.h>
 
-#define MAX_ARGS 64
+#define MAX_ARGS 1024
 
 extern char **environ;
 ssize_t read_input(char **lineptr, size_t *n);
@@ -21,5 +25,8 @@ char *_getenv(char *name, char **env);
 int main(int argc, char **argv, char **envp);
 void check_exit_builtin(char *input);
 void run_shell_loop(char **envp);
+void print_env(void);
+void execute_command(char *full_path, char **argv, char **envp);
+void handle_input_error(char **argv);
 
 #endif

@@ -9,7 +9,7 @@ void check_exit_builtin(char *input)
 {
 	if (strcmp(input, "exit") == 0)
 	{
-		free(input); /* free memory before exiting*/
+		free(input);
 		exit(EXIT_SUCCESS);
 	}
 }

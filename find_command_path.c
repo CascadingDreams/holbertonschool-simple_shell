@@ -9,33 +9,31 @@
 
 char *find_command_path(char *command, char **envp)
 {
-	char *env_path, *path_copy, *dir;
-	char full_path[256];
+	char *path_env = getenv("PATH");
+	char *path_copy, *dir, *full_path;
+	struct stat st;
+	(void)envp;
 
-	if (command[0] == '/' || command[0] == '.')
-	{
-		if (access(command, X_OK) == 0)
-			return (strdup(command));
-		return (NULL);
-	}
-
-	env_path = _getenv("PATH", envp);
-	if (!env_path || env_path[0] == '\0')
+	if (!path_env || path_env[0] == '\0')
 		return (NULL);
 
-	path_copy = strdup(env_path);
-	if (!path_copy)
-		return (NULL);
-
+	path_copy = strdup(path_env);
 	dir = strtok(path_copy, ":");
 	while (dir)
 	{
-		snprintf(full_path, sizeof(full_path), "%s/%s", dir, command);
-		if (access(full_path, X_OK) == 0)
+		full_path = malloc(strlen(dir) + strlen(command) + 2);
+		if (!full_path)
 		{
 			free(path_copy);
-			return (strdup(full_path));
+			return (NULL);
 		}
+		sprintf(full_path, "%s/%s", dir, command);
+		if (stat(full_path, &st) == 0)
+		{
+			free(path_copy);
+			return (full_path);
+		}
+		free(full_path);
 		dir = strtok(NULL, ":");
 	}
 	free(path_copy);

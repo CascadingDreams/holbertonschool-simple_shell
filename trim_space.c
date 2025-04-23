@@ -15,7 +15,7 @@ char *trim_space(char *str)
 	if (str == NULL)
 		return (NULL);
 
-	while (*str == ' ' || *str == '\t')
+	while (isspace((unsigned char)*str))
 		str++;
 
 	if (*str == '\0')
@@ -24,7 +24,7 @@ char *trim_space(char *str)
 	ptr = str;
 	while (*ptr != '\0')
 	{
-		if (*ptr < 32 || *ptr > 126)
+		if (!isprint((unsigned char)*ptr))
 		{
 			*ptr = ' ';
 		}
@@ -32,7 +32,8 @@ char *trim_space(char *str)
 	}
 
 	end = str + strlen(str) - 1;
-	while (end > str && (*end == ' ' || *end == '\t' || *end < 32 || *end > 126))
+	while (end > str &&
+		   (isspace((unsigned char)*end) || !isprint((unsigned char)*end)))
 		end--;
 
 	*(end + 1) = '\0';
