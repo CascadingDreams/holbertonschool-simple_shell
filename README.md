@@ -2,7 +2,6 @@
 
 ![Shell Logo](https://img.shields.io/badge/Simple-Shell-blue)
 ![C Language](https://img.shields.io/badge/Language-C-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## Table of Contents
 - [Description](#description)
@@ -17,7 +16,6 @@
 - [Files and Functions](#files-and-functions)
 - [Man Page](#man-page)
 - [Authors](#authors)
-- [License](#license)
 
 ## Description
 
@@ -176,11 +174,8 @@ man ./man_1_simple_shell
 ## Authors
 
 [Ealise Wang](https://github.com/Ealise611)
-[Sophie Kyi Oo](https://github.com/User10538), 
+[Sophie Kyi Oo](https://github.com/User10538),
 [Sammy Hill](https://github.com/CascadingDreams)
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
