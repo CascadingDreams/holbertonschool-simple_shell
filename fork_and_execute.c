@@ -16,7 +16,11 @@ void fork_and_execute(char *input_line, char **envp)
 
 	parse_arguments(input_line, argv);
 	if (!argv[0] || argv[0][0] == '\0')
+	{
+		if (!isatty(STDIN_FILENO))
+			exit(127);
 		return;
+	}
 
 	full_path = find_command_path(argv[0], envp);
 	if (!full_path)
