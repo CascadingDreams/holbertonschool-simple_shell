@@ -19,28 +19,15 @@ void handle_sigint(int signum)
 }
 
 /**
- * main - Entry point for the simple shell program.
- *
- * @argc: The argument count.
- * @argv: The argument vector (array of arguments).
+ * run_shell_loop - Runs the main shell prompt loop.
  * @envp: The environment variables.
- *
- * Displays a prompt, reads user input, and forks a child process
- * to execute commands using `execve()`.
- * The loop continues until EOF (Ctrl+D/C) is encountered, causing the
- * program to terminate and free memory.
- *
- * Return: 0 on success, 1 on failure.
  */
-int main(int argc, char **argv, char **envp)
+void run_shell_loop(char **envp)
 {
-	int shell_running = 1;
+	char *trimmed_input;
 	size_t input_len = 0;
 	ssize_t user_input;
-	char *trimmed_input;
-	(void)argc, (void)argv;
-
-	signal(SIGINT, handle_sigint);
+	int shell_running = 1;
 
 	while (shell_running)
 	{
@@ -50,17 +37,14 @@ int main(int argc, char **argv, char **envp)
 		user_input = read_input(&input_line, &input_len);
 		if (user_input == -1)
 		{
-			if (input_line != NULL)
-			{
-				free(input_line);
-				input_line = NULL;
-			}
+			free(input_line);
+			input_line = NULL;
 			break;
 		}
 
 		input_line[strcspn(input_line, "\n")] = '\0';
-
 		trimmed_input = trim_space(input_line);
+
 		if (*trimmed_input == '\0')
 		{
 			if (!isatty(STDIN_FILENO))
@@ -68,14 +52,29 @@ int main(int argc, char **argv, char **envp)
 			continue;
 		}
 
+		check_exit_builtin(trimmed_input);
 		fork_and_execute(trimmed_input, envp);
 	}
 
-	if (input_line != NULL)
-	{
-		free(input_line);
-		input_line = NULL;
-	}
+	free(input_line);
+	input_line = NULL;
+}
+
+/**
+ * main - Entry point for the simple shell program.
+ * @argc: The argument count.
+ * @argv: The argument vector.
+ * @envp: The environment variables.
+ *
+ * Return: 0 on success.
+ */
+int main(int argc, char **argv, char **envp)
+{
+	(void)argc;
+	(void)argv;
+
+	signal(SIGINT, handle_sigint);
+	run_shell_loop(envp);
 
 	return (0);
 }

@@ -19,5 +19,7 @@ void fork_and_execute(char *input_line, char **envp);
 char *find_command_path(char *command, char **envp);
 char *_getenv(char *name, char **env);
 int main(int argc, char **argv, char **envp);
+void check_exit_builtin(char *input);
+void run_shell_loop(char **envp);
 
 #endif

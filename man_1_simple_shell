@@ -28,7 +28,7 @@ When a program is executed, the environment is passed to the new program.
 The exit status of the shell is the exit status of the last command executed.
 If no command is executed, the exit status is 0.
 .SH SIGNALS
-When used interactively, \fBsimple_shell\fR ignores SIGTERM signal. 
+When used interactively, \fBsimple_shell\fR ignores SIGTERM signal.
 It handles Ctrl+C (SIGINT) to gracefully exit the shell.
 .SH FILES
 .TP
@@ -67,8 +67,8 @@ $
 .SH BUGS
 No known bugs.
 .SH AUTHOR
-Ealise Wang (10503@holbertonstudents.com), 
-Sophie Kyi Oo (10538@holbertonstudents.com), 
+Ealise Wang (10503@holbertonstudents.com),
+Sophie Kyi Oo (10538@holbertonstudents.com),
 Sammy Hill (myallio94@gmail.com)
 .SH SEE ALSO
 .BR sh (1),

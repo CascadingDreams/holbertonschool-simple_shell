@@ -3,6 +3,7 @@
 /**
  * find_command_path - Searches for the full path of a command in $PATH
  * @command: The command name (e.g., "ls")
+ * @envp: The environment variables array.
  * Return: The full path (must be freed), or NULL if not found
  */
 
