@@ -62,7 +62,11 @@ int main(int argc, char **argv, char **envp)
 
 		trimmed_input = trim_space(input_line);
 		if (*trimmed_input == '\0')
+		{
+			if (!isatty(STDIN_FILENO))
+				exit(127);
 			continue;
+		}
 
 		fork_and_execute(trimmed_input, envp);
 	}
