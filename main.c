@@ -64,6 +64,8 @@ int main(int argc, char **argv, char **envp)
 		if (*trimmed_input == '\0')
 			continue;
 
+		check_exit_builtin(trimmed_input); /*check for "exit" command*/
+
 		fork_and_execute(trimmed_input, envp);
 	}
 
