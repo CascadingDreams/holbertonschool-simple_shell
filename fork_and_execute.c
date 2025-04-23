@@ -15,7 +15,7 @@ void fork_and_execute(char *input_line, char **envp)
 	char *full_path, *argv[MAX_ARGS];
 
 	parse_arguments(input_line, argv);
-	if (!argv[0])
+	if (!argv[0] || argv[0][0] == '\0')
 		return;
 
 	full_path = find_command_path(argv[0], envp);
