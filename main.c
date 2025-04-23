@@ -51,6 +51,11 @@ void run_shell_loop(char **envp)
 				exit(127);
 			continue;
 		}
+		if (strcmp(trimmed_input, "env") == 0)
+		{
+			print_env();
+			continue;
+		}
 
 		check_exit_builtin(trimmed_input);
 		fork_and_execute(trimmed_input, envp);
