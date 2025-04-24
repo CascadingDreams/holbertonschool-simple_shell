@@ -34,18 +34,20 @@ void fork_and_execute(char *input_line, char **envp)
 	{
 		execve(full_path, argv, envp);
 		perror("execve failed");
+		free(full_path);
 		exit(127);
 	}
 	else if (pid > 0)
 	{
 		wait(&status);
+		free(full_path);
 		if (!isatty(STDIN_FILENO))
-			exit(1);
+			exit(WEXITSTATUS(status));
 	}
 	else
 	{
 		perror("fork failed");
+		free(full_path);
 		exit(1);
 	}
-	free(full_path);
 }
