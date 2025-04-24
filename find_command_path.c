@@ -10,7 +10,7 @@
 char *find_command_path(char *command, char **envp)
 {
 	char *env_path, *path_copy, *dir;
-	char full_path[256];
+	char full_path[1024];
 
 	if (strchr(command, '/'))
 		return (strdup(command));

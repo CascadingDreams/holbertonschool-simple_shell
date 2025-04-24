@@ -15,10 +15,8 @@ void fork_and_execute(char *input_line, char **envp)
 	char *full_path, *argv[MAX_ARGS];
 
 	parse_arguments(input_line, argv);
-	if (!argv[0] || argv[0][0] == '\0')
+	if (!argv[0])
 	{
-		if (!isatty(STDIN_FILENO))
-			exit(127);
 		return;
 	}
 
@@ -36,18 +34,18 @@ void fork_and_execute(char *input_line, char **envp)
 	{
 		execve(full_path, argv, envp);
 		perror("execve failed");
-		free(full_path);
 		exit(127);
 	}
-	else if (pid < 0)
+	else if (pid > 0)
 	{
-		perror("fork failed");
-		free(full_path);
-		exit(1);
+		wait(&status);
+		if (!isatty(STDIN_FILENO))
+			exit(1);
 	}
 	else
 	{
-		wait(&status);
-		free(full_path);
+		perror("fork failed");
+		exit(1);
 	}
+	free(full_path);
 }

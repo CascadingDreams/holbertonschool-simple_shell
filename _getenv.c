@@ -11,31 +11,15 @@
  *
  * Return: The value of the environment variable, or NULL if not found.
  */
-char *_getenv(char *name, char **env)
+char *_getenv(char *name, char **envp)
 {
-	int i = 0;
-	char *temp, *token, *path = "";
+        size_t len = strlen(name);
+        int i;
 
-	if (env != NULL)
-	{
-		while (env[i] != NULL)
-		{
-			temp = malloc(strlen(env[i] + 1));
-			strcpy(temp, env[i]);
-
-			token = strtok(temp, "=");
-			if (strcmp(token, name) == 0)
-			{
-				token = strtok(NULL, "=");
-				if (token != NULL)
-				{	
-					path = malloc(strlen(token) + 1);
-					strcpy(path, token);
-				}
-			}
-			i++;
-			free(temp);
-		}
-	}
-	return (path);
+        for (i = 0; envp[i]; i++)
+        {
+                if (strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+                        return (envp[i] + len + 1);
+        }
+        return (NULL);
 }

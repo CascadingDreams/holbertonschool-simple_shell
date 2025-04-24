@@ -47,8 +47,6 @@ void run_shell_loop(char **envp)
 
 		if (*trimmed_input == '\0')
 		{
-			/*if (!isatty(STDIN_FILENO))*/
-				/*exit(127);*/
 			continue;
 		}
 		if (strcmp(trimmed_input, "env") == 0)
