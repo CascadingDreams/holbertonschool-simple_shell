@@ -14,12 +14,23 @@
 char *_getenv(char *name, char **env)
 {
 	int i;
-	size_t len = strlen(name);
+	char *temp, *token, *path = "";
 
-	for (i = 0; env[i]; i++)
+	if (env != NULL)
 	{
-		if (strncmp(env[i], name, len) == 0 && env[i][len] == '=')
-			return (env[i] + len + 1);
+		while (env[i] != NULL)
+		{
+			temp = malloc(strlen(env[i] + 1));
+			strcpy(temp, env[i]);
+
+			token = strtok(temp, "=");
+			if (token != NULL)
+			{
+				paths = malloc(strlen(token) + 1);
+				strcpy(paths, token);
+			}
+		}
+		i++;
+		free(temp);
 	}
-	return (NULL);
 }
