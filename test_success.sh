@@ -1,0 +1,1 @@
+echo "pwd" | ./hsh ; echo $?

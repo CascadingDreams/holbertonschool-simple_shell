@@ -13,8 +13,6 @@ void check_exit_builtin(char *input)
 
         if (strcmp(input, "exit") == 0)
         {
-                free(input_line); /* free memory before exiting*/
-		input_line = NULL;
-                exit(EXIT_SUCCESS);
+                exit(exit_status);
         }
 }

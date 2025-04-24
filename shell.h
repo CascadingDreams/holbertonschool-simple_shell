@@ -23,5 +23,6 @@ int main(int argc, char **argv, char **envp);
 void check_exit_builtin(char *input);
 void run_shell_loop(char **envp);
 void print_env(void);
+extern int exit_status;
 
 #endif

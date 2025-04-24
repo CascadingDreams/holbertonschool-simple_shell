@@ -1,6 +1,7 @@
 #include "shell.h"
 
 char *input_line = NULL;
+int exit_status = 0;
 
 /**
  * handle_sigint - Handles Ctrl+C (SIGINT) signal.
@@ -82,5 +83,5 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGINT, handle_sigint);
 	run_shell_loop(envp);
 
-	return (0);
+	return (exit_status);
 }

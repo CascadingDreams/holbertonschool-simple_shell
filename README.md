@@ -6,6 +6,7 @@
 ## Table of Contents
 - [Description](#description)
 - [Features](#features)
+- [Built-in Commands](#built-in-commands)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Compilation](#compilation)
@@ -26,12 +27,21 @@ This project is a simple implementation of a shell in C. The shell is a command-
 - Displays a prompt (`#cisfun$`) and waits for user input
 - Executes commands with their arguments
 - Handles the PATH to locate executables
+- Supports absolute and relative paths for commands
 - Manages process creation through fork and execve
 - Waits for command completion before returning to the prompt
 - Handles end-of-file condition (Ctrl+D)
 - Gracefully handles interrupt signals (Ctrl+C)
-- Trims whitespace from user input
+- Trims whitespace from user input and filters non-printable characters
 - Supports both interactive and non-interactive modes
+- Provides error messages for commands not found
+
+## Built-in Commands
+
+The shell currently supports the following built-in commands:
+
+- `exit`: Exit the shell
+- `env`: Print the current environment variables
 
 ## Requirements
 
@@ -108,7 +118,7 @@ Hello, World!
 /home/user/projects/simple_shell
 ```
 
-### Command Execution
+### Command Execution with Arguments
 
 ```bash
 #cisfun$ ls -la
@@ -118,50 +128,89 @@ drwxr-xr-x 6 user user  4096 Apr 22 09:50 ..
 -rw-r--r-- 1 user user   220 Apr 22 09:50 .bash_logout
 -rw-r--r-- 1 user user  3526 Apr 22 09:50 .bashrc
 -rw-r--r-- 1 user user   675 Apr 22 09:50 .profile
--rw-r--r-- 1 user user  1124 Apr 22 10:00 execute_command.c
--rw-r--r-- 1 user user  2245 Apr 22 10:00 main.c
--rw-r--r-- 1 user user   461 Apr 22 10:00 read_input.c
+-rw-r--r-- 1 user user  1124 Apr 22 10:00 _getenv.c
+-rw-r--r-- 1 user user   275 Apr 22 10:00 check_exit.c
+-rw-r--r-- 1 user user   842 Apr 22 10:00 find_command_path.c
+-rw-r--r-- 1 user user   971 Apr 22 10:00 fork_and_execute.c
+-rw-r--r-- 1 user user  1712 Apr 22 10:00 main.c
+-rw-r--r-- 1 user user   308 Apr 22 10:00 parse_arguments.c
+-rw-r--r-- 1 user user   224 Apr 22 10:00 print_env.c
+-rw-r--r-- 1 user user   431 Apr 22 10:00 read_input.c
 -rw-r--r-- 1 user user  1024 Apr 22 10:00 README.md
--rw-r--r-- 1 user user   359 Apr 22 10:00 shell.h
+-rw-r--r-- 1 user user   554 Apr 22 10:00 shell.h
 -rwxr-xr-x 1 user user 16384 Apr 22 10:00 simple_shell
--rw-r--r-- 1 user user   397 Apr 22 10:00 trim_space.c
+-rw-r--r-- 1 user user   652 Apr 22 10:00 trim_space.c
+```
+
+### Using Built-in Commands
+
+```bash
+#cisfun$ env
+USER=user
+HOME=/home/user
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+...
+
+#cisfun$ exit
+$
+```
+
+### Absolute and Relative Paths
+
+```bash
+#cisfun$ /bin/ls
+file1.c file2.c README.md simple_shell
+
+#cisfun$ ./simple_shell
+#cisfun$ exit
 ```
 
 ### Multiple Commands in Non-Interactive Mode
 
 ```bash
-$ echo -e "ls\npwd\necho Hello" | ./simple_shell
+$ echo -e "ls\npwd\necho Hello\nexit" | ./simple_shell
 file1.c file2.c README.md simple_shell
 /home/user/projects/simple_shell
 Hello
 ```
 
-### Exit
+### Error Handling
 
 ```bash
-#cisfun$ exit
-$
+#cisfun$ nonexistentcommand
+./hsh: 1: nonexistentcommand: not found
 ```
 
 ## Files and Functions
 
 | File | Description |
 | --- | --- |
-| `main.c` | Entry point for the shell program |
-| `execute_command.c` | Handles command execution |
+| `main.c` | Entry point for the shell program, handles signals and shell loop |
+| `fork_and_execute.c` | Handles command execution by forking processes |
+| `find_command_path.c` | Searches for commands in the PATH |
+| `parse_arguments.c` | Tokenizes command line into arguments |
 | `read_input.c` | Manages reading user input |
-| `trim_space.c` | Handles whitespace trimming |
+| `trim_space.c` | Handles whitespace trimming and character filtering |
+| `check_exit.c` | Processes the built-in exit command |
+| `print_env.c` | Implements the built-in env command |
+| `_getenv.c` | Custom implementation of getenv function |
 | `shell.h` | Header file with function prototypes |
 
 ### Main Functions
 
 | Function | Description |
 | --- | --- |
-| `int main(void)` | Entry point - displays prompt, reads input, and processes commands |
-| `int execute_command(char *input_line)` | Executes a command by forking a process |
+| `int main(void)` | Entry point - initializes shell and manages signal handlers |
+| `void run_shell_loop(char **envp)` | Main shell loop - displays prompt, reads and processes commands |
+| `void fork_and_execute(char *input_line, char **envp)` | Executes a command by forking a process |
+| `char *find_command_path(char *command, char **envp)` | Searches for command in PATH directories |
+| `int parse_arguments(char *input, char **argv)` | Tokenizes command line into arguments array |
 | `ssize_t read_input(char **lineptr, size_t *n)` | Reads a line of input from the user |
-| `char *trim_space(char *str)` | Removes leading and trailing whitespace from a string |
+| `char *trim_space(char *str)` | Removes leading/trailing whitespace and filters characters |
 | `void handle_sigint(int signum)` | Handles interrupt signals (Ctrl+C) |
+| `void check_exit_builtin(char *input)` | Checks and handles the exit command |
+| `void print_env(void)` | Prints environment variables |
+| `char *_getenv(char *name, char **env)` | Custom implementation to get environment variable values |
 
 ## Man Page
 
@@ -173,9 +222,9 @@ man ./man_1_simple_shell
 
 ## Authors
 
-[Ealise Wang](https://github.com/Ealise611)
-[Sophie Kyi Oo](https://github.com/User10538),
-[Sammy Hill](https://github.com/CascadingDreams)
+- [Ealise Wang](https://github.com/Ealise611) - <10503@holbertonstudents.com>
+- [Sophie Kyi Oo](https://github.com/User10538) - <10538@holbertonstudents.com>
+- [Sammy Hill](https://github.com/CascadingDreams) - <myallio94@gmail.com>
 
 ---
 

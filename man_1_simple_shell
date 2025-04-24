@@ -7,6 +7,7 @@ simple_shell \- a simple UNIX command line interpreter
 .B simple_shell
 is a simple command line interpreter that executes commands read from standard input.
 It is intended to be compatible with the most basic functions of the standard shell \fBsh\fR.
+The shell supports execution of commands with arguments and searches for executables in the PATH.
 .SH INVOCATION
 .B simple_shell
 can be invoked both interactively and non-interactively.
@@ -19,30 +20,60 @@ When invoked without a terminal connected to standard input, the shell executes 
 After a command has been split into words, if it results in a simple command and an optional list of arguments,
 the following actions are taken:
 .PP
-The command is executed with its arguments in a separate process using the \fBfork\fR and \fBexecve\fR system calls.
+1. If the command name contains a slash ('/') or starts with a dot ('.'), the shell tries to execute it directly.
+.PP
+2. Otherwise, the shell searches for the command in each directory listed in the PATH environment variable.
+.PP
+3. The command is executed with its arguments in a separate process using the \fBfork\fR and \fBexecve\fR system calls.
+.PP
+4. The shell waits for the command to complete before displaying a new prompt.
+.SH BUILT-IN COMMANDS
+.TP
+.B exit
+Exit the shell.
+.TP
+.B env
+Print the current environment variables.
 .SH ENVIRONMENT
 .B simple_shell
 uses the same environment list that was populated at program startup.
 When a program is executed, the environment is passed to the new program.
+.PP
+The PATH environment variable is used to locate executable programs.
 .SH EXIT STATUS
 The exit status of the shell is the exit status of the last command executed.
 If no command is executed, the exit status is 0.
+If a command is not found, the shell returns 127.
 .SH SIGNALS
-When used interactively, \fBsimple_shell\fR ignores SIGTERM signal.
-It handles Ctrl+C (SIGINT) to gracefully exit the shell.
+When used interactively, \fBsimple_shell\fR handles Ctrl+C (SIGINT) to gracefully exit the shell.
 .SH FILES
 .TP
 .I main.c
 The entry point of the shell program.
 .TP
-.I execute_command.c
-Handles the execution of commands.
+.I fork_and_execute.c
+Handles forking and execution of commands.
+.TP
+.I find_command_path.c
+Searches for command in PATH directories.
+.TP
+.I parse_arguments.c
+Tokenizes command line into arguments.
 .TP
 .I read_input.c
 Manages the reading of user input.
 .TP
 .I trim_space.c
-Handles whitespace trimming.
+Handles whitespace trimming and character filtering.
+.TP
+.I check_exit.c
+Handles the built-in exit command.
+.TP
+.I print_env.c
+Handles the built-in env command.
+.TP
+.I _getenv.c
+Custom implementation of getenv function.
 .TP
 .I shell.h
 Header file containing function prototypes and includes.
@@ -60,6 +91,26 @@ file1.txt file2.txt directory/
 #cisfun$ echo Hello, world!
 .br
 Hello, world!
+.br
+#cisfun$ /bin/ls -la
+.br
+total 56
+.br
+drwxr-xr-x 2 user user  4096 Apr 22 10:00 .
+.br
+drwxr-xr-x 6 user user  4096 Apr 22 09:50 ..
+.br
+[...]
+.br
+#cisfun$ env
+.br
+USER=user
+.br
+HOME=/home/user
+.br
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+.br
+[...]
 .br
 #cisfun$ exit
 .br
