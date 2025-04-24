@@ -4,10 +4,10 @@
  * fork_and_execute - Forks a new process and executes the command.
  * @input_line: the command string.
  * @envp: environ
+ * @ctx: Pointer to the shell context structure containing state variables.
  *
  * Return: void
  */
-
 void fork_and_execute(char *input_line, char **envp, shell_ctx_t *ctx)
 {
 	pid_t pid;

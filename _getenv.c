@@ -4,7 +4,7 @@
  * _getenv - Retrieves the value of an environment variable.
  *
  * @name: The name of the environment variable to search for.
- * @env: The environment variables array.
+ * @envp: The environment variables array.
  *
  * Searches through the `env` array for a matching environment
  * variable name and returns its value, or NULL if not found.
