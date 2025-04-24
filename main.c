@@ -1,6 +1,6 @@
 #include "shell.h"
 
-static char *input_line;
+char *input_line = NULL;
 
 /**
  * handle_sigint - Handles Ctrl+C (SIGINT) signal.
@@ -10,11 +10,14 @@ static char *input_line;
  */
 void handle_sigint(int signum)
 {
+	(void)signum;
 
-	if (signum > 0)
+	if (input_line != NULL)
 	{
 		free(input_line);
+		input_line = NULL;
 	}
+
 	exit(EXIT_SUCCESS);
 }
 

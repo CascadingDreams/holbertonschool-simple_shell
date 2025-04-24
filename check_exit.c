@@ -8,17 +8,13 @@
  */
 void check_exit_builtin(char *input)
 {
-        size_t len = strlen(input);
-
-        if (input == NULL)
+	if (input == NULL)
                 return;
-        if (len > 0 && input[len - 1] == '\n')
-                input[len - 1] = '\0';
-
 
         if (strcmp(input, "exit") == 0)
         {
-                free(input); /* free memory before exiting*/
+                free(input_line); /* free memory before exiting*/
+		input_line = NULL;
                 exit(EXIT_SUCCESS);
         }
 }

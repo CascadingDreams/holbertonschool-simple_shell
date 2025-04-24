@@ -10,6 +10,7 @@
 
 #define MAX_ARGS 64
 
+extern char *input_line;
 extern char **environ;
 ssize_t read_input(char **lineptr, size_t *n);
 void handle_sigint(int sig);
