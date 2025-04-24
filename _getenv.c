@@ -13,7 +13,7 @@
  */
 char *_getenv(char *name, char **env)
 {
-	int i;
+	int i = 0;
 	char *temp, *token, *path = "";
 
 	if (env != NULL)
@@ -24,13 +24,18 @@ char *_getenv(char *name, char **env)
 			strcpy(temp, env[i]);
 
 			token = strtok(temp, "=");
-			if (token != NULL)
+			if (strcmp(token, name) == 0)
 			{
-				paths = malloc(strlen(token) + 1);
-				strcpy(paths, token);
+				token = strtok(NULL, "=");
+				if (token != NULL)
+				{	
+					path = malloc(strlen(token) + 1);
+					strcpy(path, token);
+				}
 			}
+			i++;
+			free(temp);
 		}
-		i++;
-		free(temp);
 	}
+	return (path);
 }
