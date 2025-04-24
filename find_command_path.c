@@ -12,13 +12,8 @@ char *find_command_path(char *command, char **envp)
 	char *env_path, *path_copy, *dir;
 	char full_path[256];
 
-	if (command[0] == '/' || command[0] == '.')
-	{
-		if (access(command, X_OK) == 0)
-			return (strdup(command));
-		return (NULL);
-	}
-
+	if (strchr(command, '/'))
+		return (strdup(command));
 	env_path = _getenv("PATH", envp);
 	if (!env_path || env_path[0] == '\0')
 		return (NULL);
