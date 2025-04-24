@@ -24,9 +24,7 @@ void fork_and_execute(char *input_line, char **envp)
 	if (!full_path)
 	{
 		fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-		if (!isatty(STDIN_FILENO))
-			exit(127);
-		return;
+		exit(127);
 	}
 
 	pid = fork();
