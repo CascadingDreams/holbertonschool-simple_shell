@@ -1,7 +1,6 @@
 #include "shell.h"
 
-char *input_line = NULL;
-int exit_status = 0;
+static shell_ctx_t shell_ctx = {NULL, 0};
 
 /**
  * handle_sigint - Handles Ctrl+C (SIGINT) signal.
@@ -13,13 +12,14 @@ void handle_sigint(int signum)
 {
 	(void)signum;
 
-	if (input_line != NULL)
+	if (shell_ctx.input_line != NULL)
 	{
-		free(input_line);
-		input_line = NULL;
+		free(shell_ctx.input_line);
+		shell_ctx.input_line = NULL;
 	}
 
-	exit(EXIT_SUCCESS);
+	write(STDOUT_FILENO, "\n", 1);
+	exit(shell_ctx.exit_status);
 }
 
 /**
@@ -33,38 +33,40 @@ void run_shell_loop(char **envp)
 	ssize_t user_input;
 	int shell_running = 1;
 
+	shell_ctx.input_line = NULL;
+	shell_ctx.exit_status = 0;
+
 	while (shell_running)
 	{
 		if (isatty(STDIN_FILENO))
 			printf("#cisfun$ ");
 
-		user_input = read_input(&input_line, &input_len);
+		user_input = read_input(&shell_ctx.input_line, &input_len);
 		if (user_input == -1)
 		{
-			free(input_line);
-			input_line = NULL;
+			free(shell_ctx.input_line);
+			shell_ctx.input_line = NULL;
 			break;
 		}
 
-		input_line[strcspn(input_line, "\n")] = '\0';
-		trimmed_input = trim_space(input_line);
+		shell_ctx.input_line[strcspn(shell_ctx.input_line, "\n")] = '\0';
+		trimmed_input = trim_space(shell_ctx.input_line);
 
 		if (*trimmed_input == '\0')
-		{
 			continue;
-		}
+
 		if (strcmp(trimmed_input, "env") == 0)
 		{
 			print_env();
 			continue;
 		}
 
-		check_exit_builtin(trimmed_input);
-		fork_and_execute(trimmed_input, envp);
+		check_exit_builtin(trimmed_input, &shell_ctx);
+		fork_and_execute(trimmed_input, envp, &shell_ctx);
 	}
 
-	free(input_line);
-	input_line = NULL;
+	free(shell_ctx.input_line);
+	shell_ctx.input_line = NULL;
 }
 
 /**
@@ -83,5 +85,5 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGINT, handle_sigint);
 	run_shell_loop(envp);
 
-	return (exit_status);
+	return (shell_ctx.exit_status);
 }
