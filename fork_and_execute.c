@@ -37,17 +37,15 @@ void fork_and_execute(char *input_line, char **envp)
 		free(full_path);
 		exit(127);
 	}
-	else if (pid > 0)
-	{
-		wait(&status);
-		free(full_path);
-		if (!isatty(STDIN_FILENO))
-			exit(WEXITSTATUS(status));
-	}
-	else
+	else if (pid < 0)
 	{
 		perror("fork failed");
 		free(full_path);
 		exit(1);
+	}
+	else
+	{
+		wait(&status);
+		free(full_path);
 	}
 }
