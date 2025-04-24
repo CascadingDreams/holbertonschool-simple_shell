@@ -1,6 +1,5 @@
 #include "shell.h"
 
-
 /**
  * check_exit_builtin - Checks if the input command is
  * "exit" and exits the shell.
@@ -8,11 +7,16 @@
  */
 void check_exit_builtin(char *input)
 {
-	if (input == NULL)
+        if (input == NULL)
                 return;
 
-        if (strcmp(input, "exit") == 0)
+        if (strncmp(input, "exit", 4) == 0)
         {
+                if (input_line != NULL)
+                {
+                        free(input_line);
+                        input_line = NULL;
+                }
                 exit(exit_status);
         }
 }
